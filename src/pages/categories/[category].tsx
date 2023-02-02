@@ -15,12 +15,10 @@ const Category = ({posts, category}: {posts: Post[], category: string}) => {
                     pathname:'/posts/[slug]',
                     query: {
                         slug: post.meta.slug,
-                        category,
+                        category: post.category,
                     }
                 }} 
-                as = {`/posts/${post.meta.slug}`}
-               //</div> href={`/posts/${post.meta.slug}`}>{post.meta.title}</Link>
-               >{post.meta.title}</Link>
+                as = {`/posts/${post.meta.slug}`}>{post.meta.title}</Link>
                 <p>{post.meta.excerpt}</p>
             <ul>
                 {post.meta.tags.map(tag => (
@@ -50,7 +48,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props:{
             posts,
-            category,
         },
     }
 }

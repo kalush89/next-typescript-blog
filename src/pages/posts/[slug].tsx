@@ -13,7 +13,7 @@ interface MDXPost {
   }
 
 const Post = ({post}:{post:MDXPost}) => {
-    console.log(post)
+    
     return (
         <section>
             <Head>

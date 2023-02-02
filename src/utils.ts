@@ -23,6 +23,7 @@ export const getSlugs = (category: string): string[] => {
 export interface Post {
     content: string;
     meta: PostMeta;
+    category?: string;
   }
   
   export interface PostMeta {
@@ -34,7 +35,10 @@ export interface Post {
   }
 //get posts by category
 export const getPostsByCategory = (category: string): Post[] => {
-const posts = getSlugs(category).map(slug => getPost(slug, category))
+const posts = getSlugs(category).map(slug => {
+  const post = getPost(slug, category)
+  return {...post, category}
+})
 return posts
 }
 
@@ -54,6 +58,10 @@ const source = fs.readFileSync(`${root}/${category}/${slug}.mdx`,'utf8')
 }
 
 //get all post from all categories
+export const getAllPosts = (categories: string[]): Post[] => {
+const posts = categories.map(category => getPostsByCategory(category)).flat()
+return posts
+}
 
 
 
