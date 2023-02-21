@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPageContext } from "next";
 import { getPost, PostMeta } from "@/utils";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
@@ -27,14 +27,15 @@ const Post = ({post}:{post:MDXPost}) => {
 export default Post;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+   
     let slug ='';
-    let category = '';
-    if(typeof context.query.slug === 'string' && typeof context.query.category === 'string'){
+   
+    if(typeof context.query.slug === 'string'){
         slug = context.query.slug;
-        category = context.query.category;
+       
     }
     
-    const { content, meta} = getPost(slug, category)
+    const { content, meta} = getPost(slug)
     const MDXSource = await serialize(content, {
         mdxOptions: {
             rehypePlugins: [

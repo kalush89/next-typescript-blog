@@ -1,16 +1,17 @@
 import { Post } from "@/utils";
 import Link from "next/link";
 
-const Posts = ({ posts }: {posts: Post[]}) => {
+const PostList = ({ posts }: {posts: Post[]}) => {
+   
     return(
         <>
+        
             {posts.map( post => (
                 <div key={post.meta.slug}>
                     <Link href={{
-                            pathname:'/posts/[slug]',
+                            pathname:`/posts/[slug]`,
                             query: {
-                                    slug: post.meta.slug,
-                                    category: post.category,
+                                    slug: post.meta.slug
                                 }
                         }} 
                         as = {`/posts/${post.meta.slug}`}>
@@ -29,7 +30,8 @@ const Posts = ({ posts }: {posts: Post[]}) => {
             ))}
     </>
     )
+
     
 }
 
-export default Posts
+export default PostList

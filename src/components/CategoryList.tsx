@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Categories = ({categories}: {categories:string[]}) => {
+const CategoryList = ({categories}: {categories:string[]}) => {
     return (
         <ul>
             {categories.map(category =>(
@@ -12,4 +12,4 @@ const Categories = ({categories}: {categories:string[]}) => {
     )
 }
 
-export default Categories;
+export default CategoryList;

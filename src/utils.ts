@@ -24,27 +24,33 @@ export interface Post {
     content: string;
     meta: PostMeta;
     category?: string;
-  }
+}
   
-  export interface PostMeta {
+export interface PostMeta {
     excerpt: string;
     slug?: string;
     title: string;
     tags: string[];
     date: string;
-  }
+}
+
 //get posts by category
 export const getPostsByCategory = (category: string): Post[] => {
 const posts = getSlugs(category).map(slug => {
-  const post = getPost(slug, category)
-  return {...post, category}
+  const post = getPost(slug)
+  return {...post}
 })
 return posts
 }
 
 //get single post by slug and category
-export const getPost = (slug: string, category: string): Post => {
-const source = fs.readFileSync(`${root}/${category}/${slug}.mdx`,'utf8')
+export const getPost = (slug: string): Post => {
+//check all categories for a name match to the given slug name 
+const post = getCategories()
+.map(category => [fs.readdirSync(`${root}/${category}`).join(), category])
+.filter(catSlug => catSlug[0] === `${slug}.mdx`).flat()
+
+const source = fs.readFileSync(`${root}/${post[1]}/${post[0]}`,'utf8')
     const { content, data } = matter(source)
     return {content,
         meta: {
@@ -58,8 +64,14 @@ const source = fs.readFileSync(`${root}/${category}/${slug}.mdx`,'utf8')
 }
 
 //get all post from all categories
-export const getAllPosts = (categories: string[]): Post[] => {
-const posts = categories.map(category => getPostsByCategory(category)).flat()
+export const getAllPosts = (): Post[] => {
+const posts = getCategories().map(category => getPostsByCategory(category)).flat()
+return posts
+}
+
+//get all posts by tag
+export const getPostsByTag = (tag: string): Post[] => {
+const posts = getAllPosts().filter(post => post.meta.tags.includes(tag))
 return posts
 }
 
