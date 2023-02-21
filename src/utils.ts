@@ -45,12 +45,13 @@ return posts
 
 //get single post by slug and category
 export const getPost = (slug: string): Post => {
-//check all categories for a name match to the given slug name 
-const post = getCategories()
+//check all categories for a name match to the given slug name
+// and retreive an array obj of the category and doc title
+const path = getCategories()
 .map(category => [fs.readdirSync(`${root}/${category}`).join(), category])
 .filter(catSlug => catSlug[0] === `${slug}.mdx`).flat()
 
-const source = fs.readFileSync(`${root}/${post[1]}/${post[0]}`,'utf8')
+const source = fs.readFileSync(`${root}/${path[1]}/${path[0]}`,'utf8')
     const { content, data } = matter(source)
     return {content,
         meta: {
