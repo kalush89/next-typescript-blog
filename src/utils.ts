@@ -43,6 +43,7 @@ const posts = getSlugs(category).map(slug => {
 return posts
 }
 
+
 //get single post by slug and category
 export const getPost = (slug: string): Post => {
 //check all categories for a name match to the given slug name
@@ -64,17 +65,21 @@ const source = fs.readFileSync(`${root}/${path[1]}/${path[0]}`,'utf8')
     }
 }
 
+
+//get post by tag
+export const getPostsByTag = (tag: string): Post[] => {
+const posts = getAllPosts().filter( post => post.meta.tags.includes(tag))
+return posts
+}
+
+
 //get all post from all categories
 export const getAllPosts = (): Post[] => {
 const posts = getCategories().map(category => getPostsByCategory(category)).flat()
 return posts
 }
 
-//get all posts by tag
-export const getPostsByTag = (tag: string): Post[] => {
-const posts = getAllPosts().filter(post => post.meta.tags.includes(tag))
-return posts
-}
+
 
 
 

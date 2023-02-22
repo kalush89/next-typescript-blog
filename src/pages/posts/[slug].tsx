@@ -15,12 +15,12 @@ interface MDXPost {
 const Post = ({post}:{post:MDXPost}) => {
     
     return (
-        <section>
+        <article>
             <Head>
                 <title>{post.meta.title}</title>
             </Head>
             <MDXRemote {...post.source} />
-        </section>
+        </article>
     )
 }
 
