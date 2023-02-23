@@ -4,21 +4,6 @@ import process from "process";
 import path from "path";
 import matter  from 'gray-matter';
 
-const root: string = path.join(process.cwd(), 'src/posts/categories');
-
-//get categories
-export const getCategories = (): string[] => {
-    return fs.readdirSync('src/posts/categories', { withFileTypes: true })
-    .filter(dirent => dirent.isDirectory())
-    .map(dirent => dirent.name)
-}
-
-//get slugs
-export const getSlugs = (category: string): string[] => {
-    const fileNames = fs.readdirSync(`${root}/${category}`)
-    return fileNames.map(fileName => fileName.split('.')[0]) 
-}
-
 
 export interface Post {
     content: string;
@@ -34,25 +19,42 @@ export interface PostMeta {
     date: string;
 }
 
+
+const root: string = path.join(process.cwd(), 'src/posts/categories');
+
+//get categories
+export const getCategories = (): string[] => {
+    return fs.readdirSync('src/posts/categories', { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory())
+    .map(dirent => dirent.name)
+}
+
+//get slugs
+export const getSlugs = (category: string): string[] => {
+    const fileNames = fs.readdirSync(`${root}/${category}`)
+    return fileNames.map(fileName => fileName.split('.')[0]) 
+}
+
 //get posts by category
 export const getPostsByCategory = (category: string): Post[] => {
-const posts = getSlugs(category).map(slug => {
-  const post = getPost(slug)
+const posts = getSlugs(category)
+.map(slug => {
+  const post = getPostBySlug(slug)
   return {...post}
 })
 return posts
 }
 
-
 //get single post by slug and category
-export const getPost = (slug: string): Post => {
-//check all categories for a name match to the given slug name
-// and retreive an array obj of the category and doc title
-const path = getCategories()
-.map(category => [fs.readdirSync(`${root}/${category}`).join(), category])
-.filter(catSlug => catSlug[0] === `${slug}.mdx`).flat()
+export const getPostBySlug = (slug: string): Post => {
+// get the name of the category that has the supplied slug
 
-const source = fs.readFileSync(`${root}/${path[1]}/${path[0]}`,'utf8')
+//first check each category to see the one that has the slug
+const path = getCategories()
+.filter(category => fs.readdirSync(`${root}/${category}`).includes(`${slug}.mdx`))
+
+// get the post
+const source = fs.readFileSync(`${root}/${path}/${slug}.mdx`,'utf8')
     const { content, data } = matter(source)
     return {content,
         meta: {
@@ -76,6 +78,7 @@ return posts
 //get all post from all categories
 export const getAllPosts = (): Post[] => {
 const posts = getCategories().map(category => getPostsByCategory(category)).flat()
+console.log('posts',posts)
 return posts
 }
 

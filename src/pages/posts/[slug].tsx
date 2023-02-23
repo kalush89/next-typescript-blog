@@ -1,5 +1,5 @@
 import { GetServerSideProps, NextPageContext } from "next";
-import { getPost, PostMeta } from "@/utils";
+import { getPostBySlug, PostMeta } from "@/utils";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import rehypeHighlight from "rehype-highlight";
@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
        
     }
     
-    const { content, meta} = getPost(slug)
+    const { content, meta} = getPostBySlug(slug)
     const MDXSource = await serialize(content, {
         mdxOptions: {
             rehypePlugins: [
