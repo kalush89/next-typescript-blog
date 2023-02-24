@@ -4,7 +4,6 @@ import process from "process";
 import path from "path";
 import matter  from 'gray-matter';
 
-
 export interface Post {
     content: string;
     meta: PostMeta;
@@ -45,18 +44,19 @@ const posts = getSlugs(category)
 return posts
 }
 
-//get single post by slug and category
+//get single post by slug
 export const getPostBySlug = (slug: string): Post => {
-// get the name of the category that has the supplied slug
 
-//first check each category to see the one that has the slug
-const path = getCategories()
-.filter(category => fs.readdirSync(`${root}/${category}`).includes(`${slug}.mdx`))
+// get the name of the category that has the supplied slug
+const category = getCategories()
+.filter(category => getSlugs(category)
+.includes(`${slug}`))
 
 // get the post
-const source = fs.readFileSync(`${root}/${path}/${slug}.mdx`,'utf8')
-    const { content, data } = matter(source)
-    return {content,
+const source = fs.readFileSync(`${root}/${category}/${slug}.mdx`,'utf8')
+const { content, data } = matter(source)
+    return {
+        content,
         meta: {
             slug,
             excerpt: data.excerpt,
@@ -77,8 +77,7 @@ return posts
 
 //get all post from all categories
 export const getAllPosts = (): Post[] => {
-const posts = getCategories().map(category => getPostsByCategory(category)).flat()
-console.log('posts',posts)
+const posts = getCategories().flatMap(category => getPostsByCategory(category))
 return posts
 }
 
